@@ -1,0 +1,18 @@
+name: effect
+
+services:
+  effect:
+    image: effect:dev
+    container_name: effect
+    build:
+      context: ../../
+      dockerfile: deployments/dev/effect/Dockerfile
+      tags:
+        - "effect:dev"
+    volumes:
+      - ../..:/app
+      - data:/run/app
+    command: bash
+
+volumes:
+  data: null
