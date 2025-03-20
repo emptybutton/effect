@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from functools import reduce
 from itertools import chain
 from operator import and_
-from typing import Any, Generic, Never, Self, TypeVar, cast
+from typing import Any, Generic, Iterator, Never, Self, TypeVar, cast
 
 from effect.identified import Identified, Identity
 
@@ -48,6 +48,9 @@ class Effect(
 
     def _as_effect(self) -> Self:
         return self
+
+    def __iter__(self) -> Iterator[NewT | DirtyT | DeletedT]:
+        return iter(self.new_values + self.dirty_values + self.deleted_values)
 
     def __and__[
         OtherValueT,
