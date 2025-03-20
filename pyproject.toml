@@ -36,7 +36,7 @@ allow_redefinition = true
 [tool.ruff]
 src = ["src"]
 preview = true
-line-length = 80
+line-length = 90
 indent-width = 4
 
 [tool.ruff.lint]
