@@ -12,4 +12,4 @@ ENV MYPYPATH /app/src:/app/tests
 
 ENV WATCHFILES_FORCE_POLLING true
 
-ENTRYPOINT ["bash", "deployments/dev/backend/entrypoint.sh"]
+ENTRYPOINT ["bash", "deployments/dev/effect/entrypoint.sh"]
