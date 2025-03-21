@@ -1,6 +1,6 @@
 [project]
 name = "effectt"
-version = "0.1.0"
+version = "0.1.1"
 description = "Change tracking library for frozen dataclasses"
 authors = [
     {name = "Alexander Smolin", email = "88573504+emptybutton@users.noreply.github.com"}
