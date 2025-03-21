@@ -8,11 +8,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: ruff
-        run: docker compose -f deployments/dev/docker-compose.yaml run effect ruff check src
+        run: docker compose -f deployments/dev/docker-compose.yaml run effect ruff check src tests
 
   mypy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: mypy
-        run: docker compose -f deployments/dev/docker-compose.yaml run effect mypy src
+        run: docker compose -f deployments/dev/docker-compose.yaml run effect mypy src tests
+
+  pytest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: pytest
+        run: docker compose -f deployments/dev/docker-compose.yaml run effect pytest tests

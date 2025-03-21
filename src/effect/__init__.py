@@ -249,6 +249,13 @@ type AnyEffect[
     _DeletedT: Identified = Any,
 ] = Effect[_ValueT, _NewT, _MutatedT, _DeletedT]
 
+type Many[
+    _ValueT = Any,
+    _NewT: Identified = Any,
+    _MutatedT: Identified = Any,
+    _DeletedT: Identified = Any,
+] = _Effects[_ValueT, _NewT, _MutatedT, _DeletedT]
+
 
 type LifeCycle[_ValueT: Identified] = Effect[Any, _ValueT, _ValueT, _ValueT]
 

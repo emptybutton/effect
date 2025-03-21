@@ -1,15 +1,17 @@
 [project]
-name = "effect"
-version = "0.1.0"
-description = "Change tracking library for frozen dataclass"
+name = "effectt"
+version = "0.1.1"
+description = "Change tracking library for frozen dataclasses"
 authors = [
     {name = "Alexander Smolin", email = "88573504+emptybutton@users.noreply.github.com"}
 ]
-license = "Apache-2.0"
 readme = "README.md"
-# classifiers = ["Private :: Do Not Upload"]
+license = { file = "LICENSE" }
 requires-python = ">=3.13"
 dependencies = []
+
+[project.urls]
+Repository = "https://github.com/emptybutton/effect"
 
 [project.optional-dependencies]
 dev = [
