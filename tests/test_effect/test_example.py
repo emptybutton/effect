@@ -1,7 +1,15 @@
 from dataclasses import dataclass
 
 from effect import (
-    Effect, Identified, LifeCycle, New, existing, just, new, mutated, Existing
+    Effect,
+    Existing,
+    Identified,
+    LifeCycle,
+    New,
+    existing,
+    just,
+    mutated,
+    new,
 )
 
 
@@ -46,6 +54,6 @@ def test_some_x() -> None:
     x = X(id="X", number=4, a=None)
     some_x: LifeCycle[X | A] = some_x_when(x=x, number=8)
 
-    assert some_x.new_values == (A(id='A', line=''),)
-    assert some_x.mutated_values == (X(id='X', a=A(id='A', line=''), number=8),)
+    assert some_x.new_values == (A(id="A", line=""),)
+    assert some_x.mutated_values == (X(id="X", a=A(id="A", line=""), number=8),)
     assert some_x.deleted_values == tuple()
