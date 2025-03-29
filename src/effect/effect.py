@@ -21,13 +21,26 @@ DeadT = TypeVar("DeadT", covariant=True, bound=IdentifiedValue, default=Never)  
 JustT = TypeVar("JustT", default=Never)
 
 
-@dataclass(frozen=True, slots=True)
+@dataclass(frozen=True, slots=True, eq=False)
 class Effect(Generic[ValueT, NewT, TranslatedT, MutatedT, DeadT]):
     just: ValueT
     new_values: IdentifiedValueSet[NewT] = IdentifiedValueSet()
     translated_values: IdentifiedValueSet[TranslatedT] = IdentifiedValueSet()
     mutated_values: IdentifiedValueSet[MutatedT] = IdentifiedValueSet()
     dead_values: IdentifiedValueSet[DeadT] = IdentifiedValueSet()
+
+    def __eq__(self, other: object) -> bool:
+        return (
+            isinstance(other, Effect)
+            and self.just == other.just
+            and tuple(self.new_values) == tuple(other.new_values)
+            and tuple(self.translated_values) == tuple(other.translated_values)
+            and tuple(self.mutated_values) == tuple(other.mutated_values)
+            and tuple(self.dead_values) == tuple(other.dead_values)
+        )
+
+    def __hash__(self) -> int:
+        return hash(type(self)) + hash(self.just) + hash(tuple(self))
 
     @classmethod
     def of_values_with_state[
@@ -73,6 +86,17 @@ class Effect(Generic[ValueT, NewT, TranslatedT, MutatedT, DeadT]):
             | self.mutated_values
             | self.dead_values
         )
+
+    def values_with_state[T](self) -> Iterable[
+        NewValue[NewT]
+        | TranslatedValue[TranslatedT]
+        | MutatedValue[MutatedT]
+        | DeadValue[DeadT]
+    ]:
+        yield from map(NewValue, self.new_values)
+        yield from map(TranslatedValue, self.translated_values)
+        yield from map(MutatedValue, self.mutated_values)
+        yield from map(DeadValue, self.dead_values)
 
     def value_with_state_by_value[T](
         self,
