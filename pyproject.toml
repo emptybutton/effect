@@ -1,6 +1,6 @@
 [project]
 name = "effectt"
-version = "0.1.1"
+version = "0.2.0"
 description = "Change tracking library for frozen dataclasses"
 authors = [
     {name = "Alexander Smolin", email = "88573504+emptybutton@users.noreply.github.com"}
@@ -31,6 +31,7 @@ build-backend = "hatchling.build"
 packages = ["src/effect"]
 
 [tool.mypy]
+mypy_path = "$MYPY_CONFIG_FILE_DIR/src:$MYPY_CONFIG_FILE_DIR/tests"
 strict = true
 no_namespace_packages = true
 allow_redefinition = true

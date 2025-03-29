@@ -14,20 +14,21 @@ pip install effectt
 ## Example
 ```py
 from dataclasses import dataclass
+from typing import Never
 
 from effect import (
-    Effect, Identified, LifeCycle, New, existing, just, new, mutated, Existing
+    Effect, IdentifiedValue, LifeCycle, New, existing, just, new, mutated, Existing
 )
 
 
 @dataclass(kw_only=True, frozen=True, slots=True)
-class A(Identified[str]):
+class A(IdentifiedValue[str]):
     id: str
     line: str
 
 
 @dataclass(kw_only=True, frozen=True, slots=True)
-class X(Identified[str]):
+class X(IdentifiedValue[str]):
     id: str
     a: A | None
     number: int
@@ -36,7 +37,7 @@ class X(Identified[str]):
 type SomeX = (
     Existing[X]  # No effects / changes
     | New[X]  # Only `New[X]`
-    | Effect[X, A, X]  # `New[A]` and `Mutated[X]`
+    | Effect[X, A, Never, X]  # `New[A]` and `Mutated[X]`
 )
 
 
@@ -57,7 +58,7 @@ def some_x_when(*, x: X | None, number: int) -> SomeX:
     return a & x
 
     # Or without `just`:
-    # return a.then(lambda a: mutated(X(
+    # return a.and_then(lambda a: mutated(X(
     #     id=x.id,
     #     number=number,
     #     a=a,
@@ -70,7 +71,7 @@ some_x: LifeCycle[X | A]  # All effects / changes for X and A
 some_x = some_x_when(x=x, number=8)
 
 assert just(some_x).number == 8
-assert some_x.new_values == (A(id='A', line=''),)
-assert some_x.mutated_values == (X(id='X', a=A(id='A', line=''), number=4),)
-assert some_x.deleted_values == tuple()
+assert tuple(some_x.new_values) == (A(id='A', line=''),)
+assert tuple(some_x.mutated_values) == (X(id='X', a=A(id='A', line=''), number=8),)
+assert tuple(some_x.dead_values) == tuple()
 ```

@@ -1,26 +1,19 @@
 from dataclasses import dataclass
+from typing import Never
 
-from effect import (
-    Effect,
-    Existing,
-    Identified,
-    LifeCycle,
-    New,
-    existing,
-    just,
-    mutated,
-    new,
-)
+from effect.effect import Effect
+from effect.identity import IdentifiedValue
+from effect.sugar import Existing, LifeCycle, New, existing, just, mutated, new
 
 
 @dataclass(kw_only=True, frozen=True, slots=True)
-class A(Identified[str]):
+class A(IdentifiedValue[str]):
     id: str
     line: str
 
 
 @dataclass(kw_only=True, frozen=True, slots=True)
-class X(Identified[str]):
+class X(IdentifiedValue[str]):
     id: str
     a: A | None
     number: int
@@ -29,7 +22,7 @@ class X(Identified[str]):
 type SomeX = (
     Existing[X]  # No effects / changes
     | New[X]  # Only `New[X]`
-    | Effect[X, A, X]  # `New[A]` and `Mutated[X]`
+    | Effect[X, A, Never, X]  # `New[A]` and `Mutated[X]`
 )
 
 
@@ -54,6 +47,6 @@ def test_some_x() -> None:
     x = X(id="X", number=4, a=None)
     some_x: LifeCycle[X | A] = some_x_when(x=x, number=8)
 
-    assert some_x.new_values == (A(id="A", line=""),)
-    assert some_x.mutated_values == (X(id="X", a=A(id="A", line=""), number=8),)
-    assert some_x.deleted_values == tuple()
+    assert tuple(some_x.new_values) == (A(id="A", line=""),)
+    assert tuple(some_x.mutated_values) == (X(id="X", a=A(id="A", line=""), number=8),)
+    assert tuple(some_x.dead_values) == tuple()
