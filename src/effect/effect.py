@@ -33,10 +33,10 @@ class Effect(Generic[ValueT, NewT, TranslatedT, MutatedT, DeadT]):
         return (
             isinstance(other, Effect)
             and self.just == other.just
-            and tuple(self.new_values) == tuple(other.new_values)
-            and tuple(self.translated_values) == tuple(other.translated_values)
-            and tuple(self.mutated_values) == tuple(other.mutated_values)
-            and tuple(self.dead_values) == tuple(other.dead_values)
+            and frozenset(self.new_values) == frozenset(other.new_values)
+            and frozenset(self.translated_values) == frozenset(other.translated_values)
+            and frozenset(self.mutated_values) == frozenset(other.mutated_values)
+            and frozenset(self.dead_values) == frozenset(other.dead_values)
         )
 
     def __hash__(self) -> int:
